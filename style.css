@@ -28,7 +28,47 @@ section {
     background-color: rgb(245, 245, 245);
 }
 
+input, textarea {
+    width: 100%;
+    background-color: #242424;
+    color: #fff;
+    /* Non evidenzia il campo quando ci si è cliccato su, visto che è l'impostazione di default.
+    Naturalmente, outline può anche essere usato per modificarne l'aspetto. */
+    outline: none;
+    /* L'aspetto che ha gli viene fatto qui dopo essere stato "resettato" il default. */
+    border: 3px solid #c0c4cc;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    height: 40px;
+    /* Per fare in modo che il cambio di colore del bordo avvenga gradualmente */
+    transition: all 500ms ease;
+}
+
+textarea {
+    /* Permette di ridimensionare solo in verticale se trascinata l'area */
+    resize: vertical;
+    height: 100px;
+    padding: 15px;
+    margin-top: 8px;
+}
+
+label {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+input:hover, textarea:hover {
+    border-color: #dcdfe6;
+}
+
+/* Il focus è quando l'elemento è selezionato e accetta quindi input da tastiera o mouse */
+input:focus, textarea:focus {
+    border-color: cyan;
+}
+
 .container {
+    width: 100%;
     padding: 50px;
 }
 
@@ -40,6 +80,7 @@ section {
 }
 
 .click {
+    cursor: pointer;
     transition: all 300ms ease;
 }
 
@@ -65,6 +106,66 @@ section {
 .blue {
     color: blue;
 }
+
+
+/* Diamo un parent relative all'hover:after absolute*/
+.link__hover-effect {
+    position: relative;
+}
+
+/* aggiunge il contenuto specificato dopo la tag/classe associata.
+Per esempio scrivendo "after" nel content, i link diventeranno da per esempio
+About a Aboutafter */
+.link__hover-effect:after {
+    /* content anche vuoto necessario affinchè gli pseudo elementi
+    (questo after) funzionino. */
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: -3px;
+    right: 0;
+    height: 3px;
+    width: 0;
+    transition: all 300ms ease;
+}
+
+/* In generale tutte le pseudo classi vengono generate quando si verificano le
+condizioni necessarie (passarci sopra col mouse in questo caso).
+Inoltre si seleziona prima la pseudo classe e poi lo pseudo elemento su cui
+deve venire applicata in caso (after:hover non va) */
+.link__hover-effect:hover:after {
+    left: 0;
+    width: 100%;
+}
+
+.link__hover-effect--white:after {
+    background-color: #fff;
+}
+
+.link__hover-effect--black:after {
+    background-color: #000;
+}
+
+nav,
+.scroll,
+.header {
+    opacity: 1;
+    visibility: visible;
+    /* Transition in pratica è quanto tempo ci vuole ad alterare le caratteristiche verso
+    il raggiungimento dello stato della classe / elemento di destinazione (questo, in quanto
+    ci si sta lavorando sopra) */
+    transition: all 600ms 700ms;
+} 
+
+.modal--open nav,
+.modal--open .scroll,
+.modal--open .header {
+    opacity: 0;
+    visibility: hidden;
+    transition: all 400ms;
+}
+
+
 
 /*
 Landing page
@@ -205,6 +306,198 @@ nav {
     font-size: 20px;
 }
 
+/* 
+Modal 
+*/
+
+.modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 1100px;
+    height: 700px;
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    visibility: hidden;
+    z-index: -1;
+    /* Gli elementi che vanno fatti scomparire devono avere anche un indice z negativo
+    rispetto agli elementi su cui compaiono per una transizione che cancelli
+    sia elemento che figli allo stesso momento. */
+    transition: visibility 1s, z-index 1s, box-shadow 0.5s ease;
+}
+
+/* modal che ha un genitore (la ricerca continua ricorsivamente fino al body) modal--open */
+
+.modal--open .modal {
+    z-index: 60;
+    box-shadow: 0 20px 80px 0 rgb(0, 0, 0, 0.55);
+    visibility: visible;
+}
+
+.modal__half {
+    position: relative;
+    width: 50%;
+    padding: 40px 72px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: all 300ms ease-in;
+}
+
+/* Punto di arrivo per l'animazione di apertura della sezione modal per far unire le due metà */
+.modal--open .modal__about,
+.modal--open .modal__contact {
+    transform: translateX(0%);
+}
+
+.modal__about {
+    background-color: rgb(245, 245, 245);
+    transform: translateX(-110%);
+}
+
+.modal__languages {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.modal__language {
+    width: 25%;
+    padding: 12px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 300ms ease;
+}
+
+.modal__language:hover .language__name {
+    transform: scale(1);
+}
+
+.language__name {
+    position: absolute;
+    bottom: -10px;
+    transform: scale(0);
+    transition: all 300ms ease;
+}
+
+.modal__language:hover {
+    filter: brightness(80%);
+    transform: scale(0.9);
+}
+
+.modal__language--img {
+    width: 100%;
+}
+
+.modal__contact {
+    background-color: #242424;
+    color: white;
+    transform: translateX(110%);
+}
+
+.modal__title {
+    font-size: 26px;
+}
+
+.modal__sub-title {
+    margin: 12px 0 24px 0;
+    font-size: 14px;
+}
+
+.modal__para {
+    margin-bottom: 12px;
+    /* Spazio verticale tra le linee, con 1 sono tutte attaccate */
+    line-height: 1.75;
+}
+
+.form__item {
+    margin-bottom: 20px;
+}
+
+.form__submit {
+    background-color: #f06449;
+    border: 2px solid #f06449;
+    color: white;
+    font-weight: 700;
+    width: 100%;
+    max-width: 240px;
+    /* Per aumentare le dimensioni del pulsante */
+    padding: 12px 24px;
+    font-size: 20px;
+    transition: all 300ms ease;
+}
+
+.form__submit:hover {
+    border-color: #fff;
+    background-color: transparent;
+}
+
+/* Active di solito è quando un elemento viene cliccato. */
+.form__submit:active {
+    border-color: #f06449;
+    color: #f06449;
+}
+
+.modal__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: -1;
+}
+
+.modal__overlay--loading {
+    background-color: blue;
+    font-size: 90px;
+    z-index: -1;
+}
+
+.modal__overlay--success {
+    background-color: #4bb543;
+    font-size: 40px;
+    font-weight: 700;
+    text-align: center;
+    padding: 28px;
+}
+
+.modal__overlay--visible {
+    z-index: 1;
+    display: flex;
+}
+
+.fa-spinner {
+    /* linear è la variante della curva di bezier */
+    animation: spinner 750ms infinite linear;
+}
+
+@keyframes spinner {
+    0% {
+        transform: rotate(0);
+    }
+    
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.modal__exit {
+    position: absolute;
+    top: 30px;
+    right: 40px;
+    color: white;
+    font-size: 36px;
+    /* Per essere sicuri che compaia sopra ad ogni cosa... */
+    z-index: 1;
+}
+
 /*
 Projects
 */
@@ -284,3 +577,39 @@ Projects
     margin: 16px 0;
 }
 
+/* 
+Footer
+*/
+
+footer {
+    background-color: #242424;
+    display: flex;
+}
+
+.footer__container {
+    margin: 0 auto;
+    padding: 6% 0;
+}
+
+.footer__row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.footer__logo--img {
+    width: 70px;
+}
+
+.footer__social--list {
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    justify-content: space-around;
+    margin: 28px 0;
+}
+
+.footer__social--link,
+.footer__copyright {
+    color: white;
+}
