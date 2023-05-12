@@ -1,6 +1,34 @@
-// Service ID: service_pknape4
-// Template ID: template_b7b7w38
-// Public Key: RY5gJ0T1jlqK0Gg22
+let isModalOpen = false;
+let contrastToggle = false;
+
+/* Meglio dare un nome alle costanti e parametrizzarle per un codice più leggibile */
+const scaleFactor = 1 / 20;
+
+function moveBackground(event) {
+  /* Seleziona tutti gli elementi che corrispondono alla richiesta */
+  /* Crea un array di shapes prendendole nell'ordine in cui le ho elecante dall'HTML
+  perchè va dall'alto al basso come mi aspetterei. */
+  const shapes = document.querySelectorAll(".shape");
+  /* I metodi clientX e clientY ritornano le posizioni X e Y del puntatore del mouse. */
+  const x = event.clientX * scaleFactor;
+  const y = event.clientY * scaleFactor;
+
+  for (let i = 0; i < shapes.length; ++i) {
+    const isOdd = i % 2 !== 0;
+    const boolInt = isOdd ? -1 : 1;
+    shapes[i].style.transform = `translate(${x * boolInt}px, ${y * boolInt}px)`;
+  }
+}
+
+function toggleContrast() {
+  contrastToggle = !contrastToggle;
+  if (contrastToggle) {
+    document.body.classList += " dark-theme";
+  }
+  else {
+    document.body.classList.remove("dark-theme")
+  }
+}
 
 function contact(event) {
   /* Annulla le azioni di default, che una volta che si effettua un submit
@@ -35,7 +63,6 @@ function contact(event) {
     });
 }
 
-
 /* Per far apparire la finestra delle info / contatti la miglior pratica è bersagliare
 il "body" dell'HTML. */
 
@@ -44,7 +71,6 @@ una transition nel CSS della classe modal per tutti i parametri che compaiono ne
 sua versione aperta (che la fa diventare visibile) oppure semplicemente il
 classico all (tempo) (curva bezier a scelta) */
 
-let isModalOpen = false;
 function toggleModal() {
     if (isModalOpen) {
         document.body.classList.remove("modal--open");
